@@ -1,0 +1,81 @@
+override public function update():void 
+		{
+			super.update();
+			trace(path);
+			
+			if (!Player.id.hidden && circleCircleCollision(new Point(Player.id.x, Player.id.y), playerRadius, new Point(x, y), visionRange)) {
+				huntingPath = PathFinder.findPath(new Point(x, y), new Point(Player.id.x, Player.id.y));
+				currentPath = huntingPath
+			}
+			else currentPath = path;
+			
+			if (circleCircleCollision(new Point(x, y), 3, path[0], 3)) {
+				if (path.length <= 1) {
+					x = Math.floor(x / GC.TILE_SIZE) * GC.TILE_SIZE;
+					y = Math.floor(y / GC.TILE_SIZE) * GC.TILE_SIZE;
+					
+					trace("CAMBIANDO");
+					
+					if (going) {
+						path = PathFinder.findPath(new Point(x, y), spawnPoint);
+						going = false;
+					}
+					else {
+						path = PathFinder.findPath(new Point(x, y), toPoint);
+						going = true;
+					}
+				}
+				else path.shift();
+				
+			}
+			movement(speed, currentPath[0]);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		if (!Player.id.hidden && circleCircleCollision(getTilePositionFromXY(Player.id.x, Player.id.y), playerRadius, getTilePositionFromXY(x, y), visionRange)) {
+				if (!huntingPath || currentPath.length <= 1){
+					huntingPath = PathFinder.findPath(getTilePositionFromXY(x, y), getTilePositionFromXY(Player.id.x, Player.id.y));
+				}
+				currentPath = huntingPath
+				if (circleCircleCollision(new Point(x, y), 3, currentPath[0], 3)) {
+					currentPath.shift();
+				}
+			}
+			else {
+				if (currentPath === huntingPath) {
+					path = PathFinder.findPath(getTilePositionFromXY(x, y), spawnPoint);
+				}
+				currentPath = path;			
+				if (circleCircleCollision(new Point(x, y), 3, path[0], 3)) {
+					if (path.length <= 1) {
+						x = Math.floor(x / GC.TILE_SIZE) * GC.TILE_SIZE;
+						y = Math.floor(y / GC.TILE_SIZE) * GC.TILE_SIZE;
+						
+						trace("CAMBIANDO");
+						
+						if (going) {
+							path = PathFinder.findPath(new Point(x, y), spawnPoint);
+							going = false;
+						}
+						else {
+							path = PathFinder.findPath(new Point(x, y), toPoint);
+							going = true;
+						}
+					}
+					else path.shift();
+					
+				}
+			}
+			movement(speed, currentPath[0]);
